@@ -1,1 +1,1 @@
-fun main() { Game.run() }
+fun main() { Application.run() }

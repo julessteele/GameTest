@@ -1,7 +1,8 @@
 package entity
 
-import entity.flags.EntityFlagTypes
-import entity.flags.EntityFlags
+import entity.comp.EntityFlagTypes
+import entity.comp.EntityFlags
+import entity.comp.EntityStats
 import org.joml.Vector2f
 
 abstract class Entity(var maxHp: Float = 20f, var hp: Float = maxHp, var x: Float = 0f, var y: Float = 0f, var width: Float = 1f, var height: Float = 1f) {
@@ -32,11 +33,6 @@ abstract class Entity(var maxHp: Float = 20f, var hp: Float = maxHp, var x: Floa
     open fun update(dt: Float) {
 
         position.fma(dt, velocity)
-
-        // Remove alive flag if health is less than 0
-        if (hp <= 0f) {
-            entityStats.die()
-        }
     }
 
     open fun render() { }

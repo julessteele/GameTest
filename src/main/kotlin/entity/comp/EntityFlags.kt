@@ -1,4 +1,4 @@
-package entity.flags
+package entity.comp
 
 class EntityFlags {
 

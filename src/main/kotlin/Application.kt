@@ -1,9 +1,9 @@
-import engine.Engine
+import engine.GameEngine
 import engine.GameClock
+import input.Input
 import logger.Logger
 import org.lwjgl.Version
 import org.lwjgl.glfw.Callbacks.glfwFreeCallbacks
-import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.glfw.GLFWErrorCallback
 import org.lwjgl.opengl.GL
@@ -13,29 +13,19 @@ import org.lwjgl.system.MemoryUtil.NULL
 import java.nio.IntBuffer
 
 
-object Game {
+object Application {
 
     private var window = 0L
 
-    fun run() {
 
-        Logger.info("Starting game")
-        Logger.info("LWJGL version ${Version.getVersion()}")
-
-        init()
-        loop()
-
-        glfwFreeCallbacks(window)
-        glfwDestroyWindow(window)
-        glfwTerminate()
-    }
-
+    /** -------- Initialize everything needed for the game/application -------- */
     fun init() {
 
+        // Create error printing feedback
         GLFWErrorCallback.createPrint(System.err).set()
-
         if (!glfwInit()) throw IllegalStateException("Unable to initialize GLFW");
 
+        // Set window hints
         glfwDefaultWindowHints()
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3)
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3)
@@ -45,16 +35,30 @@ object Game {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
         // Create window and check for validity
-        window = glfwCreateWindow(400, 400, "Game", NULL, NULL)
+        window = glfwCreateWindow(854, 480, "Game", NULL, NULL)
         if (window == NULL) {
             Logger.error("Failed to create the game window long")
             throw RuntimeException("Failed to create the GLFW window")
         }
 
+        glfwMakeContextCurrent(window)   // must come before createCapabilities
+        GL.createCapabilities()          // must come before any gl* call
+        glfwSwapInterval(1)
+        glfwShowWindow(window)
+
+        // Maintain aspect ratio
+        glfwSetWindowAspectRatio(window, 16, 9);
+
         // Set up key callbacks
-        glfwSetKeyCallback(window) { window, key, /* scancode */ _, action, /* mods */ _ ->
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-                glfwSetWindowShouldClose(window, true);
+        glfwSetKeyCallback(window) { window, key, scancode, action, mods ->
+
+            if (action == GLFW_PRESS) {
+                Input.keySet.add(key)
+            }
+
+            if (action == GLFW_RELEASE) {
+                Input.keySet.remove(key)
+            }
         }
 
         // Push new frame, frames are popped automatically
@@ -83,23 +87,47 @@ object Game {
             // Make the window visible
             glfwShowWindow(window);
         }
+
+        // Initialize everything for the Engine
+        GameEngine.init(window)
     }
 
+    /** -------- The main loop function of the game -------- */
     fun loop() {
 
-        GL.createCapabilities()
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
 
         GameClock.reset() // start timing right before the first frame
 
         while (!glfwWindowShouldClose(window)) {
+
             glfwPollEvents()   // input first, so update sees fresh state
             GameClock.tick()        // once per frame, always before update
 
-            Engine.update(GameClock.deltaTime)
-            Engine.render()
+            // Update and render GameEngine
+            GameEngine.update(GameClock.deltaTime)
+            GameEngine.render()
 
+            // Buffers should only be swapped ONCE at the end of the frame
             glfwSwapBuffers(window)
         }
+    }
+
+    /** The main function to run the application */
+    fun run() {
+
+        Logger.info("Starting game")
+        Logger.info("LWJGL version ${Version.getVersion()}")
+
+        init()
+        loop()
+
+        // Cleanup before terminating
+        glfwFreeCallbacks(window)
+        glfwDestroyWindow(window)
+        glfwTerminate()
+
+        // Provide context to debugger
+        Logger.info("Game exited successfully")
     }
 }
