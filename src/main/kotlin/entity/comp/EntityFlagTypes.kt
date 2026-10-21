@@ -4,5 +4,5 @@ enum class EntityFlagTypes {
 
     ENTITY_ALIVE,
     ENTITY_SOLID,
-    ENTITY_VISIBLE,
+    ENTITY_VISIBLE
 }

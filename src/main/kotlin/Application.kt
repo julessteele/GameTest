@@ -18,7 +18,9 @@ object Application {
     private var window = 0L
 
 
-    /** -------- Initialize everything needed for the game/application -------- */
+    /**
+     * Initialize everything needed for the game/application window
+     **/
     fun init() {
 
         // Create error printing feedback
@@ -92,7 +94,10 @@ object Application {
         GameEngine.init(window)
     }
 
-    /** -------- The main loop function of the game -------- */
+    /**
+     * The main loop function of the game.
+     * Contains the while loop that sustains the game loop.
+     **/
     fun loop() {
 
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f)
@@ -102,7 +107,7 @@ object Application {
         while (!glfwWindowShouldClose(window)) {
 
             glfwPollEvents()   // input first, so update sees fresh state
-            GameClock.tick()        // once per frame, always before update
+            GameClock.tick()   // once per frame, always before update
 
             // Update and render GameEngine
             GameEngine.update(GameClock.deltaTime)
@@ -113,7 +118,7 @@ object Application {
         }
     }
 
-    /** The main function to run the application */
+    /** The main function to run the application cleanly. */
     fun run() {
 
         Logger.info("Starting game")

@@ -5,7 +5,7 @@ import entity.comp.EntityFlags
 import entity.comp.EntityStats
 import org.joml.Vector2f
 
-abstract class Entity(var maxHp: Float = 20f, var hp: Float = maxHp, var x: Float = 0f, var y: Float = 0f, var width: Float = 1f, var height: Float = 1f) {
+abstract class Entity(var name: String, var maxHp: Float = 20f, var hp: Float = maxHp, var x: Float = 0f, var y: Float = 0f, var width: Float = 1f, var height: Float = 1f) {
 
     /** Center of the entity, in world units. */
     val position = Vector2f(x, y)
@@ -30,7 +30,7 @@ abstract class Entity(var maxHp: Float = 20f, var hp: Float = maxHp, var x: Floa
     fun overlaps(o: Entity) = left < o.right && right > o.left && bottom < o.top && top > o.bottom
 
     /** MUST use super in extended classes in order for basic entity functions to work */
-    open fun update(dt: Float) {
+    open fun tick(dt: Float) {
 
         position.fma(dt, velocity)
     }
