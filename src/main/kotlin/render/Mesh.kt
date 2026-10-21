@@ -45,33 +45,30 @@ class Mesh(vertices: FloatArray, indices: IntArray) : AutoCloseable {
 
     companion object {
 
-        /** Unit cube centered on the origin, CCW winding, per-face normals. */
-        fun cube(): Mesh {
-            // each face: normal(3), u axis(3), v axis(3), where u x v = normal
-            val faces = arrayOf(
-                floatArrayOf(0f, 0f, 1f, 1f, 0f, 0f, 0f, 1f, 0f),
-                floatArrayOf(0f, 0f, -1f, -1f, 0f, 0f, 0f, 1f, 0f),
-                floatArrayOf(1f, 0f, 0f, 0f, 0f, -1f, 0f, 1f, 0f),
-                floatArrayOf(-1f, 0f, 0f, 0f, 0f, 1f, 0f, 1f, 0f),
-                floatArrayOf(0f, 1f, 0f, 1f, 0f, 0f, 0f, 0f, -1f),
-                floatArrayOf(0f, -1f, 0f, 1f, 0f, 0f, 0f, 0f, 1f),
+        /** Unit square in the XZ plane, normal +Y, CCW when viewed from above. */
+        fun quad(): Mesh {
+            val n = floatArrayOf(0f, 1f, 0f)
+            val verts = floatArrayOf(
+                -0.5f, 0f, -0.5f, n[0], n[1], n[2], 0f, 0f,
+                0.5f, 0f, -0.5f, n[0], n[1], n[2], 1f, 0f,
+                0.5f, 0f,  0.5f, n[0], n[1], n[2], 1f, 1f,
+                -0.5f, 0f,  0.5f, n[0], n[1], n[2], 0f, 1f,
             )
-            val corners = arrayOf(-1 to -1, 1 to -1, 1 to 1, -1 to 1)
-            val uvs = arrayOf(0f to 0f, 1f to 0f, 1f to 1f, 0f to 1f)
+            return Mesh(verts, intArrayOf(0, 2, 1, 0, 3, 2))
+        }
 
+        /** Unit-diameter circle in the XZ plane (triangle fan). */
+        fun circle(segments: Int = 32): Mesh {
             val verts = ArrayList<Float>()
             val idx = ArrayList<Int>()
-            for ((fi, f) in faces.withIndex()) {
-                for ((ci, c) in corners.withIndex()) {
-                    for (axis in 0..2) {
-                        verts += f[axis] * 0.5f + (c.first * f[3 + axis] + c.second * f[6 + axis]) * 0.5f
-                    }
-                    verts += f[0]; verts += f[1]; verts += f[2]
-                    verts += uvs[ci].first; verts += uvs[ci].second
-                }
-                val b = fi * 4
-                idx += listOf(b, b + 1, b + 2, b, b + 2, b + 3)
+            verts += listOf(0f, 0f, 0f, 0f, 1f, 0f, 0.5f, 0.5f) // center
+            for (i in 0..segments) {
+                val a = (i.toFloat() / segments) * 2f * Math.PI.toFloat()
+                val c = kotlin.math.cos(a)
+                val s = kotlin.math.sin(a)
+                verts += listOf(c * 0.5f, 0f, -s * 0.5f, 0f, 1f, 0f, c * 0.5f + 0.5f, s * 0.5f + 0.5f)
             }
+            for (i in 1..segments) { idx += listOf(0, i, i + 1) }
             return Mesh(verts.toFloatArray(), idx.toIntArray())
         }
     }
