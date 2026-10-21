@@ -2,7 +2,12 @@ package entity.comp
 
 import entity.Entity
 
-class EntityStats<T : Entity>(val parent: T, val maxHp: Float, var hp: Float = maxHp, var level: Int = 1) {
+class EntityStats<T : Entity>(
+    parent: T,
+    var maxHp: Float,
+    var hp: Float = maxHp,
+    var level: Int = 1) :
+    EntityComp<T>(parent) {
 
     fun hurt(n: Float) = this.hp - n
 

@@ -1,5 +1,6 @@
 package render
 
+import org.joml.Vector3f
 import org.lwjgl.opengl.GL30C.*
 
 class Mesh(vertices: FloatArray, indices: IntArray) : AutoCloseable {
@@ -45,30 +46,33 @@ class Mesh(vertices: FloatArray, indices: IntArray) : AutoCloseable {
 
     companion object {
 
-        /** Unit square in the XZ plane, normal +Y, CCW when viewed from above. */
+        // The vector which all XY plane objects use for their normal vec
+        private val n = Vector3f(0f, 0f, 1f)
+
+        /** Unit square in the XY plane, normal +Z, CCW when viewed from +Z. */
         fun quad(): Mesh {
-            val n = floatArrayOf(0f, 1f, 0f)
             val verts = floatArrayOf(
-                -0.5f, 0f, -0.5f, n[0], n[1], n[2], 0f, 0f,
-                0.5f, 0f, -0.5f, n[0], n[1], n[2], 1f, 0f,
-                0.5f, 0f,  0.5f, n[0], n[1], n[2], 1f, 1f,
-                -0.5f, 0f,  0.5f, n[0], n[1], n[2], 0f, 1f,
+                // xPos, yPos, zPos,   xNorm, yNorm, zNorm,   uCoord, vCoord
+                -0.5f, -0.5f, 0f,   n.x, n.y, n.z,   0f, 0f,
+                 0.5f, -0.5f, 0f,   n.x, n.y, n.z,   1f, 0f,
+                 0.5f,  0.5f, 0f,   n.x, n.y, n.z,   1f, 1f,
+                -0.5f,  0.5f, 0f,   n.x, n.y, n.z,   0f, 1f,
             )
-            return Mesh(verts, intArrayOf(0, 2, 1, 0, 3, 2))
+            return Mesh(verts, intArrayOf(0, 1, 2, 0, 2, 3))
         }
 
-        /** Unit-diameter circle in the XZ plane (triangle fan). */
+        /** Unit-diameter circle in the XY plane (triangle fan), normal +Z. */
         fun circle(segments: Int = 32): Mesh {
             val verts = ArrayList<Float>()
             val idx = ArrayList<Int>()
-            verts += listOf(0f, 0f, 0f, 0f, 1f, 0f, 0.5f, 0.5f) // center
+            verts += listOf(0f, 0f, 0f, 0f, 0f, 1f, 0.5f, 0.5f) // center
             for (i in 0..segments) {
                 val a = (i.toFloat() / segments) * 2f * Math.PI.toFloat()
                 val c = kotlin.math.cos(a)
                 val s = kotlin.math.sin(a)
-                verts += listOf(c * 0.5f, 0f, -s * 0.5f, 0f, 1f, 0f, c * 0.5f + 0.5f, s * 0.5f + 0.5f)
+                verts += listOf(c * 0.5f, s * 0.5f, 0f, 0f, 0f, 1f, c * 0.5f + 0.5f, s * 0.5f + 0.5f)
             }
-            for (i in 1..segments) { idx += listOf(0, i, i + 1) }
+            for (i in 1..segments) idx += listOf(0, i, i + 1)
             return Mesh(verts.toFloatArray(), idx.toIntArray())
         }
     }

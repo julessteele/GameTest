@@ -5,6 +5,7 @@ import entity.comp.EntityFlags
 import entity.comp.EntityStats
 import org.joml.Vector2f
 import org.joml.Vector3f
+import world.World
 
 abstract class Entity(
     var name: String,
@@ -12,13 +13,14 @@ abstract class Entity(
     var hp: Float = maxHp,
     var pos: Vector3f = Vector3f(),
     var width: Float = 1f,
-    var height: Float = 1f) {
+    var height: Float = 1f,
+    var moving: Boolean = false) {
 
     /** Center of the entity, in world units. */
     val velocity = Vector2f()
     var rotation = 0f // radians
 
-    val entityFlags = EntityFlags()
+    val entityFlags = EntityFlags(this)
     val entityStats = EntityStats(this, maxHp, hp)
 
     /** Entities initialize alive and solid */
@@ -39,5 +41,5 @@ abstract class Entity(
 
     abstract fun tick(dt: Float)
     /** NOTE: When this function is overridden, you do not need to call the begin or end functions, as that is done by the game engine. */
-    abstract fun render()
+    abstract fun render(world: World)
 }

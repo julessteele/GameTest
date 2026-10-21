@@ -1,9 +1,13 @@
 package entity
 
 import input.Input
+import org.joml.Matrix4f
 import org.joml.Vector3f
 import org.lwjgl.glfw.GLFW.*
 import render.Camera
+import render.ColorVecs
+import render.Mesh
+import world.World
 
 class PlayerEntity(
     name: String = "PlayerEntity",
@@ -12,25 +16,44 @@ class PlayerEntity(
     pos: Vector3f = Vector3f(),
     width: Float = 1f,
     height: Float = 1f,
-    var cam: Camera) :
+    var cam: Camera? = null) :
     Entity(name, maxHp, hp, pos, width, height) {
 
     private val moveSpeed = 10f
+    private var quad: Mesh = Mesh.quad()
+    private var circle: Mesh = Mesh.circle()
 
     override fun tick(dt: Float) {
 
         // ==== Handle player movement ====
         if (Input.isPressed(GLFW_KEY_W))
-            pos.x += moveSpeed * dt
+            this.pos.y += moveSpeed * dt
         if (Input.isPressed(GLFW_KEY_S))
-            pos.x -= moveSpeed * dt
+            this.pos.y -= moveSpeed * dt
         if (Input.isPressed(GLFW_KEY_A))
-            pos.y -= moveSpeed * dt
+            this.pos.x -= moveSpeed * dt
         if (Input.isPressed(GLFW_KEY_D))
-            pos.y -= moveSpeed * dt
+            this.pos.x += moveSpeed * dt
     }
 
-    override fun render() {
+    override fun render(world: World) {
 
+        // TODO ========= Remove later - for testing ======================================================
+        fun drawRect(pos: Vector3f, w: Float, h: Float, rot: Float, color: Vector3f) {
+            val model = Matrix4f().translate(pos.x, pos.y, pos.z).rotateY(rot).scale(w, h, 1f)
+            world.renderer?.submit(quad, model, color)
+        }
+
+        fun drawCircle(pos: Vector3f, radius: Float, color: Vector3f) {
+            val model = Matrix4f().translate(pos.x, pos.y, pos.z).scale(radius, radius, 1f)
+            world.renderer?.submit(circle, model, color)
+        }
+        // ===============================================================================================
+
+        // For reference
+        drawRect(Vector3f(0f, 0f, -1f), 5f, 10f, 0f, ColorVecs.WHITE)
+
+        // Draw the "Player"
+        drawCircle(this.pos, 1.5f, ColorVecs.GREEN)
     }
 }
