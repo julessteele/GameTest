@@ -19,8 +19,8 @@ class Camera(
     private val invViewProj = Matrix4f()
 
     fun follow(x: Float, y: Float) {
-        position.set(x, y, 10f)
-        target.set(x, y, 0f)
+        position.set(x, y, this.position.z)
+        target.set(x, y, this.target.z)
     }
 
     fun update() {
