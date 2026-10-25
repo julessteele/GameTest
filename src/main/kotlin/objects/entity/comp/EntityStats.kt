@@ -1,6 +1,6 @@
-package entity.comp
+package objects.entity.comp
 
-import entity.Entity
+import objects.entity.Entity
 
 class EntityStats<T : Entity>(
     parent: T,

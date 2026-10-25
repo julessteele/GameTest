@@ -4,7 +4,7 @@ import org.joml.Matrix4f
 import org.joml.Vector3f
 
 class Camera(
-    var viewHeight: Float = 20f,   // world units visible vertically (zoom)
+    var viewHeight: Float = 40f,   // world units visible vertically (zoom)
     var aspect: Float = 16f / 9f,
     var near: Float = 0.1f,
     var far: Float = 100f) {

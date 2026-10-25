@@ -1,6 +1,6 @@
-package entity.comp
+package objects.entity.comp
 
-import entity.Entity
+import objects.entity.Entity
 
 /**
  * The type and parent must be the same in order for this to work.

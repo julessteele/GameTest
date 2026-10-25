@@ -111,7 +111,8 @@ object Application {
 
             // Update and render GameEngine
             GameEngine.update(GameClock.deltaTime)
-            GameEngine.render()
+            GameEngine.tick(GameClock.deltaTime)
+            GameEngine.render(GameClock.deltaTime)
 
             // Buffers should only be swapped ONCE at the end of the frame
             glfwSwapBuffers(window)

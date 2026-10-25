@@ -1,4 +1,4 @@
-package entity
+package objects.entity
 
 import input.Input
 import org.joml.Matrix4f
@@ -19,24 +19,29 @@ class PlayerEntity(
     var cam: Camera? = null) :
     Entity(name, maxHp, hp, pos, width, height) {
 
-    private val moveSpeed = 10f
+    private val moveSpeed = 1f
     private var quad: Mesh = Mesh.quad()
     private var circle: Mesh = Mesh.circle()
 
-    override fun tick(dt: Float) {
+    override fun update(dt: Float) {
+
+        super.update(dt)
 
         // ==== Handle player movement ====
         if (Input.isPressed(GLFW_KEY_W))
-            this.pos.y += moveSpeed * dt
+            this.velocity.y += moveSpeed * dt
         if (Input.isPressed(GLFW_KEY_S))
-            this.pos.y -= moveSpeed * dt
+            this.velocity.y -= moveSpeed * dt
         if (Input.isPressed(GLFW_KEY_A))
-            this.pos.x -= moveSpeed * dt
+            this.velocity.x -= moveSpeed * dt
         if (Input.isPressed(GLFW_KEY_D))
-            this.pos.x += moveSpeed * dt
+            this.velocity.x += moveSpeed * dt
     }
 
-    override fun render(world: World) {
+    override fun tick(dt: Float, world: World) {
+    }
+
+    override fun render(dt: Float, world: World) {
 
         // TODO ========= Remove later - for testing ======================================================
         fun drawRect(pos: Vector3f, w: Float, h: Float, rot: Float, color: Vector3f) {
@@ -48,9 +53,9 @@ class PlayerEntity(
             val model = Matrix4f().translate(pos.x, pos.y, pos.z).scale(radius, radius, 1f)
             world.renderer?.submit(circle, model, color)
         }
-        // ===============================================================================================
+        // TODO ===========================================================================================
 
-        // For reference
+        // For reference on the scene
         drawRect(Vector3f(0f, 0f, -1f), 5f, 10f, 0f, ColorVecs.WHITE)
 
         // Draw the "Player"

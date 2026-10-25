@@ -8,6 +8,7 @@ class Mesh(vertices: FloatArray, indices: IntArray) : AutoCloseable {
     val vao: Int = glGenVertexArrays()
     private val vbo: Int = glGenBuffers()
     private val ebo: Int = glGenBuffers()
+
     val indexCount: Int = indices.size
 
     init {
@@ -46,33 +47,41 @@ class Mesh(vertices: FloatArray, indices: IntArray) : AutoCloseable {
 
     companion object {
 
-        // The vector which all XY plane objects use for their normal vec
+        /** The vector which ALL "xy" plane objects use for their "normal" vector. */
         private val n = Vector3f(0f, 0f, 1f)
 
         /** Unit square in the XY plane, normal +Z, CCW when viewed from +Z. */
         fun quad(): Mesh {
+
             val verts = floatArrayOf(
                 // xPos, yPos, zPos,   xNorm, yNorm, zNorm,   uCoord, vCoord
                 -0.5f, -0.5f, 0f,   n.x, n.y, n.z,   0f, 0f,
                  0.5f, -0.5f, 0f,   n.x, n.y, n.z,   1f, 0f,
                  0.5f,  0.5f, 0f,   n.x, n.y, n.z,   1f, 1f,
-                -0.5f,  0.5f, 0f,   n.x, n.y, n.z,   0f, 1f,
-            )
+                -0.5f,  0.5f, 0f,   n.x, n.y, n.z,   0f, 1f)
+
             return Mesh(verts, intArrayOf(0, 1, 2, 0, 2, 3))
         }
 
         /** Unit-diameter circle in the XY plane (triangle fan), normal +Z. */
         fun circle(segments: Int = 32): Mesh {
+
             val verts = ArrayList<Float>()
             val idx = ArrayList<Int>()
+
             verts += listOf(0f, 0f, 0f, 0f, 0f, 1f, 0.5f, 0.5f) // center
+
             for (i in 0..segments) {
+
                 val a = (i.toFloat() / segments) * 2f * Math.PI.toFloat()
                 val c = kotlin.math.cos(a)
                 val s = kotlin.math.sin(a)
+
                 verts += listOf(c * 0.5f, s * 0.5f, 0f, 0f, 0f, 1f, c * 0.5f + 0.5f, s * 0.5f + 0.5f)
             }
+
             for (i in 1..segments) idx += listOf(0, i, i + 1)
+
             return Mesh(verts.toFloatArray(), idx.toIntArray())
         }
     }

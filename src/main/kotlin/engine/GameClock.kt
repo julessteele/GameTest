@@ -2,12 +2,12 @@ package engine
 
 object GameClock {
 
-    /** The interval (ratio/times per second) used by the world to update */
+    /** The interval (ratio/Hz) used by the world to update. */
     const val INTERVAL = 1f / 20f
-
-    // The timer used for ticking the world
+    /** The timer used for ticking the world at 20hz. */
     var world_timer = 0f
-    // Time since last frame
+
+    /** The time at the start of the last frame. */
     private var lastTime = System.nanoTime()
 
     /** Seconds elapsed between the last two ticks, scaled by timeScale. */

@@ -7,13 +7,6 @@ import org.joml.Vector3f
 import org.lwjgl.opengl.GL11C.*
 import org.lwjgl.opengl.GL30C.*
 
-private class RenderCommand(
-    val mesh: Mesh,
-    val shader: Shader,
-    val model: Matrix4f,
-    val color: Vector3f,
-)
-
 class Renderer : AutoCloseable {
 
     val clearColor = Vector3f(0.08f, 0.09f, 0.12f)
@@ -98,7 +91,6 @@ class Renderer : AutoCloseable {
 
     override fun close() = defaultShader.close()
 
-
     // Provide companion object for use of all default shader constants
     private companion object {
 
@@ -142,3 +134,5 @@ class Renderer : AutoCloseable {
         """
     }
 }
+
+private class RenderCommand(val mesh: Mesh, val shader: Shader, val model: Matrix4f, val color: Vector3f)
