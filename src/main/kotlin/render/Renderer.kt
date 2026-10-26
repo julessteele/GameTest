@@ -35,7 +35,7 @@ class Renderer : AutoCloseable {
         if (width <= 0 || height <= 0) return
 
         glViewport(0, 0, width, height)
-        camera?.aspect = width.toFloat() / height
+        camera?.aspectRatio = width.toFloat() / height
     }
 
     fun begin(camera: Camera?) {

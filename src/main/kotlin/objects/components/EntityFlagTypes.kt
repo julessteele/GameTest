@@ -1,4 +1,4 @@
-package objects.entity.comp
+package objects.components
 
 enum class EntityFlagTypes {
 

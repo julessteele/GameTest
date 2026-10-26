@@ -19,7 +19,7 @@ class PlayerEntity(
     var cam: Camera? = null) :
     Entity(name, maxHp, hp, pos, width, height) {
 
-    private val moveSpeed = 1f
+    private val moveSpeed = 100f
     private var quad: Mesh = Mesh.quad()
     private var circle: Mesh = Mesh.circle()
 

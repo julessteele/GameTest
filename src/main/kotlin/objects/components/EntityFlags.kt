@@ -1,8 +1,8 @@
-package objects.entity.comp
+package objects.components
 
 import objects.entity.Entity
 
-class EntityFlags<T : Entity>(parent: T): EntityComp<T>(parent) {
+class EntityFlags<T : Entity>(parent: T): EntityComponent<T>(parent) {
 
     private var flags: MutableList<EntityFlagTypes> = mutableListOf()
 

@@ -1,12 +1,13 @@
 package objects.entity
 
 import objects.GameObject
-import objects.entity.comp.EntityFlagTypes
-import objects.entity.comp.EntityFlags
-import objects.entity.comp.EntityStats
+import objects.components.EntityFlagTypes
+import objects.components.EntityFlags
+import objects.components.EntityStats
 import org.joml.Vector2f
 import org.joml.Vector3f
 import world.World
+import kotlin.math.pow
 
 abstract class Entity(
     name: String,
@@ -22,14 +23,13 @@ abstract class Entity(
     val bottom get() = pos.y - height / 2
     val top get() = pos.y + height / 2
 
-    /** Center of the entity, in world units. */
     val velocity = Vector2f()
     var rotation = 0f // radians
 
     val entityFlags = EntityFlags(this)
     val entityStats = EntityStats(this, maxHp, hp)
 
-    /** Entities initialize alive and solid */
+    /** Add flags the entity should spawn with here. */
     init {
         entityFlags.addFlag(EntityFlagTypes.ENTITY_ALIVE)
         entityFlags.addFlag(EntityFlagTypes.ENTITY_SOLID)
@@ -40,19 +40,19 @@ abstract class Entity(
 
     /**
      * Updates as fast as the frame rate, multiply by dt for movement.
-     * Must super the function in order for velocity to work, or implement custom velocity rules.
+     * NOTE: Must super the function in order for velocity to work, or implement custom velocity rules.
      **/
     override fun update(dt: Float) {
 
         // Clamp velocity so it can't accelerate to infinity
-        velocity.x = velocity.x.coerceIn(-1f, 1f)
-        velocity.y = velocity.y.coerceIn(-1f, 1f)
+        velocity.x = velocity.x.coerceIn(-10f, 10f)
+        velocity.y = velocity.y.coerceIn(-10f, 10f)
 
-        // Adds the velocity to the entity's movement
-        this.pos.add(velocity.x, velocity.y, 0f)
+        // Simulate friction and make sure it's consistent with delta time.
+        this.velocity.mul(0.9f.pow(dt * 60f), 0.9f.pow(dt * 60f))
 
-        // Simulate friction
-        this.pos.mul(0.9f, 0.9f, 1f)
+        // Adds the velocity to the entity's movement.
+        this.pos.add(velocity.x * dt, velocity.y * dt, 0f)
     }
 
     /** The tick function for entities, runs at 20 hz */

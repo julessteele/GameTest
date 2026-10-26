@@ -4,13 +4,17 @@ import org.joml.Matrix4f
 import org.joml.Vector3f
 
 class Camera(
-    var viewHeight: Float = 40f,   // world units visible vertically (zoom)
-    var aspect: Float = 16f / 9f,
+    var viewHeight: Float = 25f,   // world units visible vertically (zoom)
+    var aspectRatio: Float = 16f / 9f, // the aspect ratio the camera should provide, set to 16:9 by default
     var near: Float = 0.1f,
     var far: Float = 100f) {
 
+    /** The current position of the camera. */
     val position = Vector3f(0f, 0f, 10f)
+    /** The position which the camera should move to. */
     val target = Vector3f()
+
+    /** The constant for the vector that provides the "up" direction. */
     private val up = Vector3f(0f, 1f, 0f)
 
     val view = Matrix4f()
@@ -25,7 +29,7 @@ class Camera(
 
     fun update() {
         val halfH = viewHeight / 2f
-        val halfW = halfH * aspect
+        val halfW = halfH * aspectRatio
         view.identity().lookAt(position, target, up)
         projection.identity().ortho(-halfW, halfW, -halfH, halfH, near, far)
         projection.mul(view, viewProjection)

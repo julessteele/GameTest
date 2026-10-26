@@ -1,4 +1,4 @@
-package objects.entity.comp
+package objects.components
 
 import objects.entity.Entity
 
@@ -7,7 +7,7 @@ class EntityStats<T : Entity>(
     var maxHp: Float,
     var hp: Float = maxHp,
     var level: Int = 1) :
-    EntityComp<T>(parent) {
+    EntityComponent<T>(parent) {
 
     fun hurt(n: Float) = this.hp - n
 
