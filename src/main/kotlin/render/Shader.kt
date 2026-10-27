@@ -3,6 +3,7 @@ package render
 import org.joml.Matrix3f
 import org.joml.Matrix4f
 import org.joml.Vector3f
+import org.joml.Vector4f
 import org.lwjgl.opengl.GL20C.*
 import org.lwjgl.system.MemoryStack
 
@@ -49,6 +50,8 @@ class Shader(vertexSrc: String, fragmentSrc: String) : AutoCloseable {
         glUniform1i(loc(name), v)
     fun set(name: String, v: Vector3f) =
         glUniform3f(loc(name), v.x, v.y, v.z)
+    fun set(name: String, v: Vector4f) =
+        glUniform4f(loc(name), v.x, v.y, v.z, v.w)
 
     fun set(name: String, m: Matrix4f) =
         MemoryStack.stackPush().use { stack ->

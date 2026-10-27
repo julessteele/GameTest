@@ -10,14 +10,16 @@ import render.Renderer
 open class World(
     val name: String,
     val gameObjects: MutableList<GameObject>,
-    var camera: Camera? = null,
+    var camera: Camera = Camera(),
     var renderer: Renderer? = null) {
 
+    var player: PlayerEntity = PlayerEntity()
+
     init {
+
         // At the start of initializing the player, create a camera for it so that the world may have a camera to function
-        gameObjects.add(PlayerEntity(cam = Camera()))
-        // TODO If the player is removed, the camera is then removed resulting in a crash
-        camera = (gameObjects.find { it.name == "PlayerEntity" } as PlayerEntity).cam
+        gameObjects.add(player)
+        camera = player.cam
     }
 
     /**

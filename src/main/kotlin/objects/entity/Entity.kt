@@ -1,11 +1,13 @@
 package objects.entity
 
+import input.Input
 import objects.GameObject
 import objects.components.EntityFlagTypes
 import objects.components.EntityFlags
 import objects.components.EntityStats
 import org.joml.Vector2f
 import org.joml.Vector3f
+import org.lwjgl.glfw.GLFW.*
 import world.World
 import kotlin.math.pow
 
@@ -15,7 +17,8 @@ abstract class Entity(
     var hp: Float = maxHp,
     var pos: Vector3f = Vector3f(),
     var width: Float = 1f,
-    var height: Float = 1f): GameObject(name) {
+    var height: Float = 1f,
+    var friction: Float = 90f): GameObject(name) {
 
     // Axis-aligned bounds
     val left get() = pos.x - width / 2
@@ -45,11 +48,11 @@ abstract class Entity(
     override fun update(dt: Float) {
 
         // Clamp velocity so it can't accelerate to infinity
-        velocity.x = velocity.x.coerceIn(-10f, 10f)
-        velocity.y = velocity.y.coerceIn(-10f, 10f)
+        velocity.x = velocity.x.coerceIn(-5f, 5f)
+        velocity.y = velocity.y.coerceIn(-5f, 5f)
 
         // Simulate friction and make sure it's consistent with delta time.
-        this.velocity.mul(0.9f.pow(dt * 60f), 0.9f.pow(dt * 60f))
+        this.velocity.mul(0.9f.pow(dt * friction), 0.9f.pow(dt * friction))
 
         // Adds the velocity to the entity's movement.
         this.pos.add(velocity.x * dt, velocity.y * dt, 0f)

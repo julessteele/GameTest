@@ -4,7 +4,7 @@ import org.joml.Matrix4f
 import org.joml.Vector3f
 
 class Camera(
-    var viewHeight: Float = 25f,   // world units visible vertically (zoom)
+    var viewHeight: Float = 8f,   // world units visible vertically (zoom)
     var aspectRatio: Float = 16f / 9f, // the aspect ratio the camera should provide, set to 16:9 by default
     var near: Float = 0.1f,
     var far: Float = 100f) {
