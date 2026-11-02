@@ -23,7 +23,7 @@ class PlayerEntity(
 
     private val moveSpeed = 100f
 
-    private val sprite = Texture.fromFile("player.png")
+    private val sprite = Texture.fromFile("assets/spritesheets/player.png")
 
     override fun update(dt: Float) {
 

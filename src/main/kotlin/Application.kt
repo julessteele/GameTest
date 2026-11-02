@@ -12,6 +12,7 @@ import org.lwjgl.system.MemoryStack.stackPush
 import org.lwjgl.system.MemoryUtil.NULL
 import java.nio.IntBuffer
 
+// TODO MAKE TILED MAP AND SPRITES
 
 object Application {
 

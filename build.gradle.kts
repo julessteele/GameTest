@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.4.20"
+    kotlin("plugin.serialization") version "2.4.20"
 }
 
 group = "io.github.julessteele"
@@ -10,8 +11,8 @@ repositories {
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
 
+    // LWJGL
     implementation(platform("org.lwjgl:lwjgl-bom:3.4.3"))
 
     implementation("org.lwjgl:lwjgl")
@@ -101,6 +102,9 @@ dependencies {
     }
     implementation("org.joml:joml-primitives:1.10.0")
     implementation("org.joml:joml:1.10.9")
+
+    // JSON + Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 }
 
 kotlin {
