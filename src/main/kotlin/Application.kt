@@ -18,7 +18,6 @@ object Application {
 
     private var window = 0L
 
-
     /**
      * Initialize everything needed for the game/application window
      **/
@@ -26,7 +25,7 @@ object Application {
 
         // Create error printing feedback
         GLFWErrorCallback.createPrint(System.err).set()
-        if (!glfwInit()) throw IllegalStateException("Unable to initialize GLFW");
+        if (!glfwInit()) throw IllegalStateException("Unable to initialize GLFW")
 
         // Set window hints
         glfwDefaultWindowHints()

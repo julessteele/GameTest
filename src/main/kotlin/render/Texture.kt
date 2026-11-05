@@ -17,7 +17,8 @@ class Texture private constructor(val id: Int, val width: Int, val height: Int) 
 
     companion object {
 
-        fun fromFile(path: String): Texture = MemoryStack.stackPush().use { stack ->
+        /** Loads a texture from "src/main/resources/assets/$path" */
+        fun loadFromFilepath(path: String): Texture = MemoryStack.stackPush().use { stack ->
 
             val w = stack.mallocInt(1)
             val h = stack.mallocInt(1)
@@ -25,7 +26,7 @@ class Texture private constructor(val id: Int, val width: Int, val height: Int) 
 
             stbi_set_flip_vertically_on_load(true)
 
-            val pixels = stbi_load("src/main/resources/$path", w, h, c, 4)
+            val pixels = stbi_load("src/main/resources/assets/$path", w, h, c, 4)
                 ?: error("Failed to load $path: ${stbi_failure_reason()}")
 
             val id = glGenTextures()

@@ -23,26 +23,26 @@ class PlayerEntity(
 
     private val moveSpeed = 100f
 
-    private val sprite = Texture.fromFile("assets/spritesheets/player.png")
+    private val sprite = Texture.loadFromFilepath("assets/spritesheets/player.png")
 
     override fun update(dt: Float) {
 
         super.update(dt)
 
         // Prevent diagonal movement speedup
-        val diagonal = (Input.isPressed(GLFW_KEY_W) != Input.isPressed(GLFW_KEY_S)) &&
-                       (Input.isPressed(GLFW_KEY_A) != Input.isPressed(GLFW_KEY_D))
-        val x = if (diagonal) 1f/sqrt(2.0).toFloat() else 1f
+        val isMovingDiag = (Input.isPressed(GLFW_KEY_W) != Input.isPressed(GLFW_KEY_S)) &&
+                           (Input.isPressed(GLFW_KEY_A) != Input.isPressed(GLFW_KEY_D))
+        val diagNormMult = if (isMovingDiag) 1f / sqrt(2.0).toFloat() else 1f
 
         // ==== Handle player movement ====
         if (Input.isPressed(GLFW_KEY_W))
-            this.velocity.y += moveSpeed * dt * x
+            this.velocity.y += moveSpeed * dt * diagNormMult
         if (Input.isPressed(GLFW_KEY_S))
-            this.velocity.y -= moveSpeed * dt * x
+            this.velocity.y -= moveSpeed * dt * diagNormMult
         if (Input.isPressed(GLFW_KEY_A))
-            this.velocity.x -= moveSpeed * dt * x
+            this.velocity.x -= moveSpeed * dt * diagNormMult
         if (Input.isPressed(GLFW_KEY_D))
-            this.velocity.x += moveSpeed * dt * x
+            this.velocity.x += moveSpeed * dt * diagNormMult
     }
 
     override fun tick(dt: Float, world: World) {
